@@ -18,6 +18,10 @@ app.set('view engine', 'ejs')
 
 app.get('/', (req, res) => {
   res.render('login')
+  connection.query('SELECT * FROM config', (err, res) => {
+    if (err) throw err;
+    console.log(res);
+  })
 })
 
 app.listen(port, () => {
