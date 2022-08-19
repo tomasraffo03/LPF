@@ -34,7 +34,7 @@ app.use(session({
 app.use(authChecker);
 
 app.get('/', (req, res) => {
-  console.log('tomas')
+  console.log(req.session)
   if (req.session.auth) {
     res.redirect('/home')
   } else {
@@ -43,9 +43,9 @@ app.get('/', (req, res) => {
 })
 
 app.get('/logout', (req, res) => {
-  console.log('/logout')
   req.session.auth = false;
   req.session.username = '';
+  req.session.role = '';
   res.redirect('/')
 })
 
@@ -67,7 +67,7 @@ app.get('/home', (req, res) => {
   })
 })
 
-app.get('/altausuario', adminChecker, (req, res) => {
+app.get('/altausuario', (req, res) => {
   console.log(req.session.role)
   // despues crear middleware para chequear que sea admin
   // otra func -> ponerlo entre params app.get
@@ -78,18 +78,22 @@ app.post('/login', (req, res) => {
   let username = req.body.username;
   let password = crypto.createHash('sha256').update(req.body.password).digest('hex');
 
-  connection.query("SELECT user_id, user_username, user_password FROM user WHERE user_username = ?", [username], (err, rows) => {
+  connection.query("SELECT user_id, user_username, user_password, user_role FROM user WHERE user_username = ?", [username], (err, rows) => {
     if (err) { throw err }
+
+    let role = rows[0].user_role;
+
     if (rows.length == 0) {
       req.session.auth = false;
       req.session.username = '';
+      req.session.role = '';
       res.status(400).send(`<p>Usuario no encontrado</p> ${buttonVolverOrigen}`)
     } else {
       if (rows[0].user_password == password) {
         // iniciar sesion
+        req.session.role = role;
         req.session.auth = true;
         req.session.username = username;
-        req.session.role = rows[0].user_role;
         res.redirect('/home')
       } else {
         res.status(400).send(`<p>Contraseña incorrecta</p> ${buttonVolverOrigen}`)
@@ -103,7 +107,7 @@ app.post('/altausuario', (req, res) => {
   let secPos;
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
-  
+
   connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, params.username, pw], (err, rows) => {
     if (err) { throw err }
     console.log('Usuario creado!');
@@ -116,19 +120,17 @@ app.listen(port, () => {
 })
 
 function authChecker(req, res, next) {
-  if (req.session.auth || req.path == '/' || req.path == '/login') {
+  if ((req.session.auth || req.path == '/' || req.path == '/login') && req.path != '/altausuario') {
     next();
   } else {
-    res.redirect('/');
-  }
-}
-
-function adminChecker(req, res, next) {
-  console.log(req.session.role)
-  if ((req.session.auth && req.session.role == 'A') || (req.path == '/' || req.path == '/login')) {
-    next();
-  } else {
-    res.redirect('/');
+    if (req.path == '/altausuario' || req.path == '/crearpartido' || req.path == '/proponerhorario') {
+      console.log(req.session.role)
+      if (req.session.role == 'A') {
+        next();
+      } else res.redirect('/home')
+    } else {
+      res.redirect('/');
+    }
   }
 }
 
