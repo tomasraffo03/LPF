@@ -33,16 +33,20 @@ app.use(session({
 }))
 app.use(authChecker);
 
-// req.session.usuario = //nombre de usuario con el que ingresó
-// req.session.active = false;
-
 app.get('/', (req, res) => {
+  console.log('tomas')
   if (req.session.auth) {
-    res.render('home')
+    res.redirect('/home')
   } else {
     res.render('login');
   }
+})
 
+app.get('/logout', (req, res) => {
+  console.log('/logout')
+  req.session.auth = false;
+  req.session.username = '';
+  res.redirect('/')
 })
 
 app.get('/home', (req, res) => {
@@ -59,11 +63,12 @@ app.get('/home', (req, res) => {
     })
 
     user_info = rows[0];
-    res.render('home', { user_info: user_info, matches_info: matches_info})
+    res.render('home', { user_info: user_info, matches_info: matches_info })
   })
 })
 
-app.get('/altausuario', (req, res) => {
+app.get('/altausuario', adminChecker, (req, res) => {
+  console.log(req.session.role)
   // despues crear middleware para chequear que sea admin
   // otra func -> ponerlo entre params app.get
   res.render('altaUsuario')
@@ -84,13 +89,26 @@ app.post('/login', (req, res) => {
         // iniciar sesion
         req.session.auth = true;
         req.session.username = username;
+        req.session.role = rows[0].user_role;
         res.redirect('/home')
       } else {
         res.status(400).send(`<p>Contraseña incorrecta</p> ${buttonVolverOrigen}`)
       }
     }
   })
+})
 
+app.post('/altausuario', (req, res) => {
+  let params = req.body;
+  let secPos;
+
+  let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
+  
+  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, params.username, pw], (err, rows) => {
+    if (err) { throw err }
+    console.log('Usuario creado!');
+    res.redirect('/altausuario');
+  })
 })
 
 app.listen(port, () => {
@@ -99,6 +117,15 @@ app.listen(port, () => {
 
 function authChecker(req, res, next) {
   if (req.session.auth || req.path == '/' || req.path == '/login') {
+    next();
+  } else {
+    res.redirect('/');
+  }
+}
+
+function adminChecker(req, res, next) {
+  console.log(req.session.role)
+  if ((req.session.auth && req.session.role == 'A') || (req.path == '/' || req.path == '/login')) {
     next();
   } else {
     res.redirect('/');
