@@ -15,6 +15,7 @@
                                         <% } %>
         %></p>
 
+        <button id="b_confUser" username="<%= user_info.user_username %>">Configurar Perfil</button>
         <button id="b_logout">Cerrar Sesión</button>
         
     </header>
@@ -26,12 +27,14 @@
             <button class="admin_buttons" id="b_proponerHorario">Proponer Horario</button>
         <% } %> 
 
-
-        <% if (matches_info.length > 0) { %> 
-            <% for (var m = 0; m < matches_info.length; m++) {%>                
-                <p>Partido <%= matches_info[m].match_id %>. Hora <%= matches_info[m].match_hour %></p>
-            <% }%>                
-        <% } %> 
+        <div class="partidos">  
+            <p> <%= matches_info.length %> </p> 
+            <% if (matches_info.length > 0) { %> 
+                <% matches_info.forEach(match => { %>
+                    <p>Partido <%= match.match_id %>. Dia <%= match.match_date %>  Hora <%= match.match_hour %> <a href="">ANOTARSE</a></p> 
+                <% }) %>                
+            <% } %> 
+        </div>
     </div>
 
     <script src="/js/home.js"></script>

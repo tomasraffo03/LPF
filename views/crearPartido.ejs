@@ -4,57 +4,19 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alta Usuario | LPF</title>
+    <title>Crear Partido | LPF</title>
 </head>
 <body>
     <div class="main">
-        <p class="alta" align="center">Alta Usuario</p>
-        <form class="form1" action="/altausuario" method="post">
-            <input class="un" name="name" type="text" align="center" placeholder="Nombre" required autocomplete="false" autofocus>
-            <input class="un" name="surname" type="text" align="center" placeholder="Apellido" required autocomplete="false">
-            <div class="radios" align="center">
-                <div class="radio">
-                    <label for="A">ADMIN</label>
-                    <input class="un" name="role" type="radio" required value="A">
-                </div>
-                <div class="radio">
-                    <label for="J">JUGADOR</label>
-                    <input class="un" name="role" type="radio" required value="J">
-                </div>
-            </div>
-            <input class="un" name="dtbirth" type="date" align="center" placeholder="Fecha de Nacimiento" required autocomplete="false">
-            <input class="un" name="pos" type="text" align="center" placeholder="Posición Principal" required autocomplete="false">
-            <input class="un" name="pos2" type="text" align="center" placeholder="Posición Secundaria" autocomplete="false">
-            <input class="un" name="username" type="text" align="center" placeholder="Nombre de Usuario" required autocomplete="false">
-            <input class="un" name="password" type="text" align="center" placeholder="Contraseña" required autocomplete="false">
-            <input type="submit" value="Dar de Alta" class="submit" align="center" id="submitButton">
+        <p class="alta" align="center">Crear Partido</p>
+        <form class="form1" action="/crearpartido" method="post">
+            <input id="inp_date" class="un" name="date" type="date" align="center" placeholder="Fecha" required autocomplete="false">
+            <input id="inp_hour" class="un" name="hour" type="time" align="center" placeholder="Hora" required autocomplete="false">
+            <input type="submit" value="Crear" class="submit" align="center" id="submitButton">
         </form>
     </div>
 
     <style>
-        .radios {
-            width: 100%;
-            display: flex;
-            justify-content: space-evenly;
-            align-items: center;
-            padding: 10px 20px;
-            margin: 0;
-        }
-
-        .radio {
-            height: 100%;
-            width: 30%;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-        }
-
-        .radio input, .radio label {
-            width: 30%;
-            margin: 0;
-            margin-top: 2px;
-        }
-
         .alta {
             padding-top: 40px;
             color: #8C55AA;

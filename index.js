@@ -34,7 +34,6 @@ app.use(session({
 app.use(authChecker);
 
 app.get('/', (req, res) => {
-  console.log(req.session)
   if (req.session.auth) {
     res.redirect('/home')
   } else {
@@ -58,20 +57,33 @@ app.get('/home', (req, res) => {
     connection.query("SELECT * FROM `match` WHERE match_status = ?", ['pendiente'], (err, rowsMatches) => {
       if (err) throw err;
       if (rowsMatches.length > 0) {
-        matches_info = rowsMatches;
+        matches_info = [...rowsMatches];
+        console.log(matches_info)
       }
+
+      user_info = rows[0];
+      res.render('home', { user_info: user_info, matches_info: matches_info })      
     })
 
-    user_info = rows[0];
-    res.render('home', { user_info: user_info, matches_info: matches_info })
   })
 })
 
 app.get('/altausuario', (req, res) => {
-  console.log(req.session.role)
-  // despues crear middleware para chequear que sea admin
-  // otra func -> ponerlo entre params app.get
   res.render('altaUsuario')
+})
+
+app.get('/crearpartido', (req, res) => {
+  res.render('crearPartido')
+})
+
+app.get('/configuracion/:username', (req, res) => {
+  if (req.session.username == req.params.username || req.session.role == 'A') {
+    res.render('configuracion')
+  } else {
+    res.send(`<p>No tenes permiso para ver esta pagina</p>${buttonVolverOrigen}`)
+  }
+  console.log(req.params.username)
+  console.log(req.session.username)
 })
 
 app.post('/login', (req, res) => {
@@ -115,6 +127,25 @@ app.post('/altausuario', (req, res) => {
   })
 })
 
+app.post('/crearpartido', (req, res) => {
+  let maxId;
+
+  connection.query("SELECT MAX(match_team2) AS lastId FROM `match`", (err, rows) => {
+    if (err) { throw err }
+    if (rows[0].lastId == null) {
+      maxId = 0;
+    } else {
+      maxId = rows[0].lastId;
+    }
+
+    connection.query("INSERT INTO `match` VALUES (NULL,?,?,'pendiente',?,?)", [maxId + 1, maxId + 2, req.body.date, req.body.hour], (err, rows) => {
+      if (err) { throw err }
+      console.log('Partido creado!');
+      res.redirect('/crearpartido');
+    })
+  })
+})
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 })
@@ -124,7 +155,6 @@ function authChecker(req, res, next) {
     next();
   } else {
     if (req.path == '/altausuario' || req.path == '/crearpartido' || req.path == '/proponerhorario') {
-      console.log(req.session.role)
       if (req.session.role == 'A') {
         next();
       } else res.redirect('/home')
