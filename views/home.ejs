@@ -1,37 +1,66 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
     <title>LPF</title>
 </head>
 <body>
     <header>
-        <p><%= user_info.user_name %>: <% if (user_info.user_role == 'A') { %>
-                                                ADMINISTRADOR
-                                        <% } else { %> 
-                                                JUGADOR
-                                        <% } %>
-        %></p>
+        <div class="header_left">
+            <p><%= user_info.user_name %>: <% if (user_info.user_role == 'A') { %>
+                                                    ADMINISTRADOR
+                                            <% } else { %> 
+                                                    JUGADOR
+                                            <% } %>
+            </p>
+        </div>
 
-        <button id="b_confUser" username="<%= user_info.user_username %>">Configurar Perfil</button>
-        <button id="b_logout">Cerrar Sesión</button>
+        <div class="header_right">
+            <button id="b_confUser" username="<%= user_info.user_username %>">Configurar Perfil</button>
+            <button id="b_logout">Cerrar Sesión</button>
+            <button id="b_proponerHorario">Estadísticas</button>
+        </div>
         
     </header>
 
     <div class="main">
-        <% if (user_info.user_role == 'A') { %> 
-            <button class="admin_buttons" id="b_altaUsuario">Dar de alta un usuario</button>
-            <button class="admin_buttons" id="b_crearPartido">Crear partido</button>
-            <button class="admin_buttons" id="b_proponerHorario">Proponer Horario</button>
+        <% if (user_info.user_role == 'A') { %>
+            <div class="admin_buttons">
+                <button class="admin_button" id="b_altaUsuario">Dar de alta un usuario</button>
+                <button class="admin_button" id="b_crearPartido">Crear partido</button>
+            </div>
+
+            <script>
+                const b_altaUsuario = document.getElementById('b_altaUsuario');
+                const b_crearPartido = document.getElementById('b_crearPartido');
+
+                b_altaUsuario.addEventListener('click', () => {
+                    window.location.href = `${dominio}/altausuario`
+                })
+
+                b_crearPartido.addEventListener('click', () => {
+                    window.location.href = `${dominio}/crearpartido`
+                })
+            </script>
         <% } %> 
 
         <div class="partidos">  
-            <p> <%= matches_info.length %> </p> 
             <% if (matches_info.length > 0) { %> 
                 <% matches_info.forEach(match => { %>
-                    <p>Partido <%= match.match_id %>. Dia <%= match.match_date %>  Hora <%= match.match_hour %> <a href="">ANOTARSE</a></p> 
+                    <div class="partido">
+                        <div class="partido_header">
+                            <h2 id="match<%=match.match_id%>"> <%= match.match_date.toLocaleDateString() %> - <%= match.match_hour %></h2>
+                        </div>
+                        <div class="partido_body">
+                            <p>Anotados: <%= match.playersCount %>/12</p>
+                        </div>
+                        <div class="partido_footer">
+                            <button class="partido_button b_detallePartido" idPartido=<%= match.match_id %> >Detalle</button>
+                        </div>
+                    </div> 
                 <% }) %>                
             <% } %> 
         </div>

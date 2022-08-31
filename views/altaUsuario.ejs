@@ -5,8 +5,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Alta Usuario | LPF</title>
+    <script src="https://kit.fontawesome.com/70cc7e71fa.js" crossorigin="anonymous"></script>
 </head>
 <body>
+    <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
+
     <div class="main">
         <p class="alta" align="center">Alta Usuario</p>
         <form class="form1" action="/altausuario" method="post">
@@ -32,6 +35,10 @@
     </div>
 
     <style>
+        .fa-arrow-left {
+            font-size: 20px;
+        }
+
         .radios {
             width: 100%;
             display: flex;
@@ -121,18 +128,6 @@
         .un:focus {
             border: 2px solid rgba(0, 0, 0, 0.18) !important;
             
-        }
-
-        a {
-            text-shadow: 0px 0px 3px rgba(117, 117, 117, 0.12);
-            color: #E1BEE7;
-            text-decoration: none
-        }
-
-        @media (max-width: 600px) {
-            .main {
-                border-radius: 0px;
-            }
         }
 
     </style>

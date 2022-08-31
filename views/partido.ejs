@@ -1,0 +1,179 @@
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="https://kit.fontawesome.com/70cc7e71fa.js" crossorigin="anonymous"></script>
+    <title>Partido <%= data[0].match_id %> | LPF</title>
+</head>
+
+<body>
+    <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="main">
+            <p class="sign" align="center">Partido <%= data[0].match_id %>
+            <% if (user_role == 'A') { %>
+                <button id="editarButton"><i class="fa-solid fa-pen-to-square"></i></button>
+            <% } %>
+            </p>
+        <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString() %> - <%= data[0].match_hour %></p>
+        <form class="form1" action="/anotarse" method="post">
+            <input type="hidden" name="match" value="<%= data[0].match_id %>">
+            <input type="hidden" name="team1" value="<%= data[0].match_team1 %>">
+            <input type="hidden" name="team2" value="<%= data[0].match_team2 %>">
+            <h1 class="sign" align="center">Jugadores:</h1>
+            <div class="jugadores" id="div_jugadores">
+            <% for (let x = 1; x < data.length; x++) {%>
+                <p class="player" align="center"> <%= data[x].user_name[0] %>. <%= data[x].user_surname %> %></p>
+            <% } %>
+            <% if (data[0].match_status == 'pendiente') { %>
+                <% if (data.length > 1 && data[1].playerCount >= 12) { %>
+                    <input type="button" value="No más cupos" class="submit">                    
+                <% } else { %>
+                    <input type="submit" value="Anotarse" class="submit" align="center" id="anotarseButton">
+                <% } %>
+            <% } %>
+            </div>
+        </form>
+       
+        <% if (user_role == 'A') { %>
+            <form action="/editarPartido" method="post" class="formEditar" id="editarJugadores" hidden>
+                <div class="editarJugadores">
+                    <div class="t1">
+                        <h2 class="eq_header">Equipo 1</h2>
+                        <div class="eq_jugadores" id="eq_jugadores1" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team1) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>" draggable="true" ondragstart="drag(event)"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="t2">
+                        <h2 class="eq_header">Equipo 2</h2>
+                        <div class="eq_jugadores" id="eq_jugadores2" ondrop="drop(event)" ondragover="allowDrop(event)">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team2) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>" draggable="true" ondragstart="drag(event)"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="eq1" value="<%= data[0].match_team1 %>">
+                <input type="hidden" id="eq1players" name="eq1players" value='[]'>
+                <input type="hidden" name="eq2" value="<%= data[0].match_team2 %>">
+                <input type="hidden" id="eq2players" name="eq2players" value='[]'>
+                <input type="hidden" name="match_id" value="<%= data[0].match_id %>">
+                <button type="submit" class="submit" id="editarSubmit"><i class="fa-solid fa-floppy-disk"></i></button>
+            </form>
+            <% if (data[0].match_status == 'confirmado') { %>
+                <button id="cargarResultado" class="submit"><a href="/cargarResultado/<%= data[0].match_id %>">Cargar Resultado</a></button>
+            <% } %>
+            <% if (data[0].match_status == 'pendiente') { %>
+                <form action="/borrarPartido" method="post" class="formBorrar">
+                    <input type="hidden" name="eq1" value="<%= data[0].match_team1 %>">  
+                    <input type="hidden" name="eq2" value="<%= data[0].match_team2 %>">
+                    <input type="hidden" name="match_id" value="<%= data[0].match_id %>">     
+                    <button type="submit" class="submit" id="borrarSubmit"><i class="fa-solid fa-trash-can"></i></button>
+                </form>
+            <% } %>
+        <% } %>
+    </div>
+
+    <style>
+        
+        .formBorrar {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        #borrarSubmit {
+            background: #f00;
+            margin: 0;
+        }
+
+        .e_jugador:hover {
+            cursor: move;
+        }
+
+        .e_jugador {
+            background: rgb(236, 122, 14);
+        }
+
+        .eq_jugadores {
+            height: 80%;
+            width: 100%;
+            padding-left: 5px;
+        }
+        
+        .eq_header {
+            margin: 0;
+            margin-bottom: 10px;
+            border-bottom: 1px solid #000;
+        }
+
+        .t1, .t2 {
+            width: 48%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            outline: 1px solid #000;
+        }
+
+        .editarJugadores {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .formEditar {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+        }
+
+        #editarButton {
+            border: none;
+            background: none;
+            font-size: 20px;
+            cursor: pointer;
+        }
+        
+        .player {
+            margin: 2%;
+        }
+
+        .black {
+            color: #000;
+        }
+        
+        form.form1 {
+            padding-top: 10px;
+        }
+
+        .sign {
+            padding-top: 10px;
+        }
+
+        [hidden] {
+            display: none; 
+        }
+
+        .submit {
+            margin-bottom: 5px;
+        }
+
+        .submit a {
+            color: #fff;
+        }
+    </style>
+
+    
+    <script src="/js/editarPartido.js"></script>
+
+</body>
+
+</html>
