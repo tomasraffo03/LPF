@@ -1,0 +1,9 @@
+<svg id="eR1FSlMTrtQ1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 600 600" shape-rendering="geometricPrecision" text-rendering="geometricPrecision">
+  <path d="M545.209582,102.39521v298.203592L52.994013,398.802395q-.000002-296.407185-.000001-296.407185t492.215569,0" transform="translate(.000002 0)" fill="#13d513" stroke="#3f5787" stroke-width="1.2" />
+  <rect id="arquero" width="60" height="60" rx="0" ry="0" transform="matrix(.99683 0 0 2.66608 53.089113 171.514606)" fill="#13d513" stroke="#fff" stroke-width="3" />
+  <rect width="60" height="60" rx="0" ry="0" transform="matrix(.99683 0 0 2.66608 485.399784 171.514606)" fill="#13d513" stroke="#fff" stroke-width="3" />
+  <path id="lineaMedio" d="M300,102.39521v296.407185" fill="#fff" stroke="#fff" stroke-width="3" />
+  <path id="defensor" d="M53.089113,102.39521h127.491263v296.407185h-127.491264l-.0951-63.31599h61.740802v-168.008699h-61.645702l.000001-65.082496Z" transform="translate(.000002 0.000006)" fill="#13d513" stroke-width="1.2" />
+  <path id="delantero" d="M53.089113,102.39521h127.491263v296.407185h-127.491264l-.0951-63.31599h61.740802v-168.008699h-61.645702l.000001-65.082496Z" transform="matrix(-1 0 0 1 598.203596 1.796407)" fill="#13d513" stroke-width="1.2" />
+  <path id="medio" d="M180.580378,104.191617h237.042842v294.610778h-237.042842v-294.610778Z" fill="none" stroke-width="1.2" />
+</svg>

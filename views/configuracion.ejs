@@ -1,6 +1,5 @@
-<html>
+<html lang="es">
 <head>
-    <link rel="stylesheet" href="css/style.css">
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="stylesheet" href="/css/base.css">
@@ -12,24 +11,36 @@
     <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
     
     <div class="main">
-        <button onclick="showPwChange()"></button>
-
-        <p class="sign" align="center">Iniciar Sesión</p>
-        <form class="form1" action="/login" method="post">
-            <input class="un" name="username" id="un" type="text" align="center" placeholder="Nombre de Usuario" required autocomplete="false" autofocus>
-            <input class="pass" name="password" id="pass" type="password" align="center" placeholder="Contraseña" required autocomplete="false">
-            <!-- <a class="submit" align="center" id="loginButton">Iniciar Sesión</a> -->
-            <input type="submit" value="Iniciar Sesión" class="submit" align="center" id="loginButton">
+        <p class="sign" align="center"><%= data[0].user_name %> <%= data[0].user_surname %></p>
+        <h4 align="center"><%= data[0].user_username %></h4>
+        <form class="form1" action="/configuracion" method="post">
+            <label for="pos1">Posición principal (ARQ, DEF, MED, DEL) *</label>
+            <input class="un" name="pos1" id="pos1" type="text" placeholder="<%= data[0].user_pos %>" required autocomplete="off">
+            <label for="pos2">Posición secundaria (ARQ, DEF, MED, DEL)</label>
+            <input class="un" name="pos2" id="pos2" type="text" placeholder="<%= data[0].user_pos2 %>" autocomplete="off">
+            <label for="password">Contraseña *</label>
+            <input class="pass" name="password" id="pass" type="password" required autocomplete="off">
+            <input type="hidden" name="id" value="<%= data[0].user_id %>">
+            <input type="submit" value="Actualizar" class="submit" id="actualizarButton">
         </form>
     </div>
 
 
-    <script>
-        
-        function showPwChange() {
-
+    <style>
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-    </script>
+
+        .un, .pass {
+            margin-left: 0;
+        }
+
+        .submit {
+            margin-left: 0;
+        }
+    </style>
     
     
 </body>

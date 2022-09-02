@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="https://kit.fontawesome.com/70cc7e71fa.js" crossorigin="anonymous"></script>
+    <title>Partido <%= data[0].match_id %> | LPF</title>
+</head>
+
+<body>
+    <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="main">
+        <h1 class="sign">Borrar del Partido <%= data[0].match_id %></h1>
+        <form class="form1" action="/borrarJugador" method="post">
+            <input type="hidden" name="match_id" value="<%= data[0].match_id %>">            
+            <input type="hidden" name="team1" value="<%= data[0].match_team1 %>">            
+            <input type="hidden" name="team2" value="<%= data[0].match_team2 %>">            
+            <select name="idJugador" id="select">
+            <% for(let x = 1; x < data.length; x++) { %>
+                <option value="" selected disabled hidden>Elegir Jugador</option>
+                <option value="<%= data[x].user_id %>"><%= data[x].user_name %> <%= data[x].user_surname %></option>
+            <% } %>
+            </select>
+            <input type="submit" value="Eliminar" class="submit" id="borrarJugador">
+        </form>
+        
+        
+    </div>
+
+    <style>
+        * {
+            margin: 0;
+        }
+        
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .form1 {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        select {
+            border: none;
+            border-bottom: 3px solid #8C55AA;
+            margin-bottom: 20px;
+            font-family: 'Ubuntu', sans-serif;
+            height: 5vh;
+            outline: none;
+        }
+
+        option:hover {
+            cursor: pointer;
+        }
+
+        select:hover {
+            cursor: pointer;
+        }
+
+        .submit {
+            margin: 0;
+        }
+
+    </style>
+    
+</body>
+
+</html>
+</html>

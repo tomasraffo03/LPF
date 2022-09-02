@@ -29,16 +29,18 @@ header {
 }
 
 .header_left {
-    width: 40%;
+    width: 30%;
 }
 
 .header_right {
-    width: 60%;
+    width: 70%;
+    padding-right: 10px;
+    display: flex;
+    justify-content: space-evenly;
 }
 
-#b_confUser,
-#b_logout,
-#b_proponerHorario {
+.header_right button{
+    height: 60%;
     display: inline-block;
     outline: 0;
     cursor: pointer;
@@ -140,4 +142,13 @@ header {
 .fa-arrow-left {
     font-size: 20px;
     color: #000;
+}
+
+[hidden] {
+    display: none; 
+}
+
+#partidos_jugados h1 {
+    margin-left: 10px;
+    width: 90%;
 }

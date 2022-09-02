@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="https://kit.fontawesome.com/70cc7e71fa.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/jugador.css">
+    <title><%= data[0].user_name %> <%= data[0].user_surname %> | LPF</title>
+</head>
+
+<body>
+    <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="main">
+        <h1 class="sign" align="center"><%= data[0].user_name %> <%= data[0].user_surname %></h1>
+        <div class="data">
+            <h3 class="dtbirth"><%= data[0].user_dtbirth.toLocaleDateString() %></h3>
+            <object data="/img/Field.svg" type="image/svg+xml" id="svg" pos1="<%= data[0].user_pos %>" pos2="<%= data[0].user_pos2 %>"></object>
+        </div>
+        <div class="stats">
+            <p>Partidos Jugados: <%= data[0].user_pydmchs %></p>
+            <p>Partidos Ganados: <%= data[0].user_wonmatches %>
+                <% if (data[0].user_pydmchs > 0) { %>
+                    (<%= (data[0].user_wonmatches / data[0].user_pydmchs) * 100 %>%)
+                <% } %>
+            </p>
+            <p>Partidos Perdidos: <%= data[0].user_lostmatches %> 
+                <% if (data[0].user_pydmchs > 0) { %>
+                    (<%= (data[0].user_lostmatches / data[0].user_pydmchs) * 100 %>%)
+                <% } %>
+            </p>
+        </div>
+    </div>
+
+
+
+<script>
+    let svg = document.getElementById('svg');
+    let svgDoc;
+
+    let arquero;
+    let def;
+    let med;
+    let del;
+
+    let positionsArray = [];
+    svg.addEventListener('load', () => {
+        svgDoc = svg.contentDocument;
+        arquero = svgDoc.getElementById('arquero');
+        def = svgDoc.getElementById('defensor');
+        med = svgDoc.getElementById('medio');
+        del = svgDoc.getElementById('delantero');
+        
+        positionsArray = {
+            'ARQ': arquero,
+            'DEF': def,
+            'MED': med,
+            'DEL': del
+        }   
+
+        let pos1 = svg.getAttribute('pos1');
+        let pos2 = svg.getAttribute('pos2');
+
+        console.log(pos1, pos2)
+
+        //pintar zona
+        positionsArray[pos1].style.fill = '#f44'
+        
+        if (pos2 != '') {
+            positionsArray[pos2].style.fill = '#4b9fad'
+        }
+    })
+</script>
+
+
+</body>
+
+</html>

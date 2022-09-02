@@ -11,7 +11,7 @@
     <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
     <div class="main">
             <p class="sign" align="center">Partido <%= data[0].match_id %>
-            <% if (user_role == 'A') { %>
+            <% if (user_role == 'A' && data[0].match_status != 'jugado') { %>
                 <button id="editarButton"><i class="fa-solid fa-pen-to-square"></i></button>
             <% } %>
             </p>
@@ -22,10 +22,45 @@
             <input type="hidden" name="team2" value="<%= data[0].match_team2 %>">
             <h1 class="sign" align="center">Jugadores:</h1>
             <div class="jugadores" id="div_jugadores">
-            <% for (let x = 1; x < data.length; x++) {%>
-                <p class="player" align="center"> <%= data[x].user_name[0] %>. <%= data[x].user_surname %> %></p>
+            <% if (data[0].match_status == 'jugado') { %>
+                <div class="jugadoresPorEquipo">
+                    <div class="t1">
+                        <h2 class="eq_header">Equipo 1 (<%= data[0].match_det_t1goals %>)</h2>
+                        <div class="eq_jugadores" id="eq_jugadores1">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team1) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="t2">
+                        <h2 class="eq_header">Equipo 2 (<%= data[0].match_det_t2goals %>)</h2>
+                        <div class="eq_jugadores" id="eq_jugadores2">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team2) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+                <script src="/js/partido.js"></script>
+            <% } else { %>    
+                <% for (let x = 1; x < data.length; x++) {%>
+                    <p class="player" align="center" plid="<%= data[x].team_player %>"> <%= data[x].user_name[0] %>. <%= data[x].user_surname %> %></p>
+                <% } %>
+                <script>
+                    let elems_jugadores2 = document.getElementsByClassName('player');
+                    for (let x = 0; x < elems_jugadores2.length; x++) {
+                        elems_jugadores2[x].addEventListener('click', (e) => {
+                            let plid = e.target.getAttribute('plid');
+                            window.open(`/jugador/${plid}`, '_blank');
+                        })
+                    }
+                </script>
             <% } %>
-            <% if (data[0].match_status == 'pendiente') { %>
+            <% if (data[0].match_status == 'pendiente' || data[0].match_status == 'confirmado') { %>
                 <% if (data.length > 1 && data[1].playerCount >= 12) { %>
                     <input type="button" value="No más cupos" class="submit">                    
                 <% } else { %>
@@ -35,7 +70,7 @@
             </div>
         </form>
        
-        <% if (user_role == 'A') { %>
+        <% if (user_role == 'A' && data[0].match_status != 'jugado') { %>
             <form action="/editarPartido" method="post" class="formEditar" id="editarJugadores" hidden>
                 <div class="editarJugadores">
                     <div class="t1">
@@ -77,6 +112,7 @@
                     <button type="submit" class="submit" id="borrarSubmit"><i class="fa-solid fa-trash-can"></i></button>
                 </form>
             <% } %>
+            <script src="/js/editarPartido.js"></script>
         <% } %>
     </div>
 
@@ -126,6 +162,17 @@
             justify-content: center;
             width: 100%;
         }
+
+        .jugadoresPorEquipo {
+            display: flex;
+            justify-content: center;
+            width: 100%;
+        }
+
+        .jugadoresPorEquipo .e_jugador {
+            background: none;
+            cursor: pointer;
+        }
         
         .formEditar {
             display: flex;
@@ -144,6 +191,7 @@
         
         .player {
             margin: 2%;
+            cursor: pointer;
         }
 
         .black {
@@ -170,9 +218,6 @@
             color: #fff;
         }
     </style>
-
-    
-    <script src="/js/editarPartido.js"></script>
 
 </body>
 
