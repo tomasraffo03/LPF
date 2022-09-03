@@ -82,7 +82,7 @@ app.get('/home', (req, res) => {
 
 app.get('/altausuario', (req, res) => { //only admin
   if (req.session.role == 'A') {
-    res.render('altausuario')
+    res.render('altaUsuario')
   } else {
     res.send(`<p>No tenes permiso para ver esta pagina</p>${buttonVolverOrigen}`)
   }
