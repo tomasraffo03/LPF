@@ -61,7 +61,7 @@
                 </script>
             <% } %>
             <% if (data[0].match_status == 'pendiente' || data[0].match_status == 'confirmado') { %>
-                <% if (data.length > 1 && data[1].playerCount >= 12) { %>
+                <% if (data.length > 1 && data[1].playersCount >= 12) { %>
                     <input type="button" value="No más cupos" class="submit">                    
                 <% } else { %>
                     <input type="submit" value="Anotarse" class="submit" align="center" id="anotarseButton">
