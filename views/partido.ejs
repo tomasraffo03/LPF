@@ -15,7 +15,7 @@
                 <button id="editarButton"><i class="fa-solid fa-pen-to-square"></i></button>
             <% } %>
             </p>
-        <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString() %> - <%= data[0].match_hour %></p>
+        <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString('en-GB') %> - <%= data[0].match_hour %></p>
         <form class="form1" action="/anotarse" method="post">
             <input type="hidden" name="match" value="<%= data[0].match_id %>">
             <input type="hidden" name="team1" value="<%= data[0].match_team1 %>">

@@ -11,7 +11,7 @@
     <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
     <div class="main">
         <p class="sign" align="center">Partido <%= data[0].match_id %></p>
-        <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString() %> - <%= data[0].match_hour %></p>
+        <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString('en-GB') %> - <%= data[0].match_hour %></p>
         <form class="form1" action="/cargarResultado" method="post">
             <input type="hidden" name="match_id" value="<%= data[0].match_id %>">
             <input type="hidden" name="team1" value="<%= data[0].match_team1 %>">

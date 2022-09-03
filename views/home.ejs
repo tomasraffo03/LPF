@@ -60,7 +60,7 @@
                     <% if (match.match_status == 'pendiente' || match.match_status == 'confirmado') { %>
                     <div class="partido">
                         <div class="partido_header">
-                            <h2 id="match<%=match.match_id%>"> <%= match.match_date.toLocaleDateString() %> - <%= match.match_hour %></h2>
+                            <h2 id="match<%=match.match_id%>"> <%= match.match_date.toLocaleDateString('en-GB') %> - <%= match.match_hour %></h2>
                         </div>
                         <div class="partido_body">
                             <p>Anotados: <%= match.playersCount %>/12</p>
@@ -80,7 +80,7 @@
                     <h1>Historial de partidos Jugados</h1>
                     <div class="partido">
                         <div class="partido_header">
-                            <h2 id="match<%=match.match_id%>"> <%= match.match_date.toLocaleDateString() %> - <%= match.match_hour %></h2>
+                            <h2 id="match<%=match.match_id%>"> <%= match.match_date.toLocaleDateString('en-GB') %> - <%= match.match_hour %></h2>
                         </div>
                         <div class="partido_body">
                             <p>Jugadores: <%= match.playersCount %></p>

@@ -14,7 +14,7 @@
     <div class="main">
         <h1 class="sign" align="center"><%= data[0].user_name %> <%= data[0].user_surname %></h1>
         <div class="data">
-            <h3 class="dtbirth"><%= data[0].user_dtbirth.toLocaleDateString() %></h3>
+            <h3 class="dtbirth"><%= data[0].user_dtbirth.toLocaleDateString('en-GB') %></h3>
             <object data="/img/Field.svg" type="image/svg+xml" id="svg" pos1="<%= data[0].user_pos %>" pos2="<%= data[0].user_pos2 %>"></object>
         </div>
         <div class="stats">
