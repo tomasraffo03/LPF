@@ -21,6 +21,7 @@
             <label for="password">Contraseña *</label>
             <input class="pass" name="password" id="pass" type="password" required autocomplete="off">
             <input type="hidden" name="id" value="<%= data[0].user_id %>">
+            <input type="hidden" name="username" value="<%= data[0].user_username %>">
             <input type="submit" value="Actualizar" class="submit" id="actualizarButton">
         </form>
     </div>
