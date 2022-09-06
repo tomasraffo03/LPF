@@ -351,7 +351,7 @@ app.post('/borrarPartido', (req, res) => {
 
 app.post('/configuracion', (req, res) => {
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
-  if (req.body.pos2 == '') { pos2 = null } else { pos2 = req.body.pos2.toUpperCase }
+  if (req.body.pos2 == '') { pos2 = null } else { pos2 = req.body.pos2.toUpperCase() }
   console.log(req.body)
   connection.query("UPDATE user SET user_pos=?, user_pos2=?, user_password=? WHERE user_id=?", [req.body.pos1.toUpperCase(), pos2, pw, req.body.id], (err, rows) => {
     if (err) throw err;
