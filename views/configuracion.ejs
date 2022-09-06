@@ -13,7 +13,7 @@
     <div class="main">
         <p class="sign" align="center"><%= data[0].user_name %> <%= data[0].user_surname %></p>
         <h4 align="center"><%= data[0].user_username %></h4>
-        <form class="form1" action="/configuracion" method="post" autocomplete="false">
+        <form class="form1" action="/configuracion" method="post" autocomplete="off">
             <label for="pos1">Posición principal (ARQ, DEF, MED, DEL) *</label>
             <input class="field" name="pos1" id="pos1" type="text" placeholder="<%= data[0].user_pos %>" required autocomplete="off">
             <label for="pos2">Posición secundaria (ARQ, DEF, MED, DEL)</label>
