@@ -15,9 +15,9 @@
         <h4 align="center"><%= data[0].user_username %></h4>
         <form action="/configuracion" method="post" autocomplete="off">
             <label for="pos1">Posición principal (ARQ, DEF, MED, DEL) *</label>
-            <input class="field" name="pos1" id="pos1" type="text" placeholder="<%= data[0].user_pos %>" required autocomplete="off">
+            <input class="field" name="pos1" id="pos1" type="text" placeholder="<%= data[0].user_pos %>" required autocomplete="off" maxlength="3">
             <label for="pos2">Posición secundaria (ARQ, DEF, MED, DEL)</label>
-            <input class="field" name="pos2" id="pos2" type="text" placeholder="<%= data[0].user_pos2 %>" autocomplete="off">
+            <input class="field" name="pos2" id="pos2" type="text" placeholder="<%= data[0].user_pos2 %>" autocomplete="off" maxlength="3">
             <label for="password">Contraseña *</label>
             <input class="pass" name="password" id="pass" type="password" required autocomplete="off">
             <input type="hidden" name="id" value="<%= data[0].user_id %>">
