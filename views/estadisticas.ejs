@@ -20,13 +20,13 @@
                 <summary class="stat_title">Jugadores con más Partidos ganados</summary>
                 <table>
                     <thead>
-                        <td>Nombre de Usuario</td>
+                        <td>Nombre</td>
                         <td>PG</td>
                         <td>PJ</td>
                     </thead>
                     <% mostWinnersArr.forEach(user => { %>
                         <tr class="tr_player" plid="<%= user.user_id %>">
-                            <td><%= user.user_username %></td>
+                            <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_wonmatches %></td>
                             <td><%= user.user_pydmchs %></td>
                         </tr>
@@ -40,13 +40,13 @@
                 <summary class="stat_title">Jugadores con más Partidos perdidos</summary>
                 <table>
                     <thead>
-                        <td>Nombre de Usuario</td>
+                        <td>Nombre</td>
                         <td>PP</td>
                         <td>PJ</td>
                     </thead>
                     <% mostLosersArr.forEach(user => { %>
                         <tr class="tr_player" plid="<%= user.user_id %>">
-                            <td><%= user.user_username %></td>
+                            <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_lostmatches %></td>
                             <td><%= user.user_pydmchs %></td>
                         </tr>
@@ -60,14 +60,14 @@
                 <summary class="stat_title">Jugadores más efectivos</summary>
                 <table>
                     <thead>
-                        <td>Nombre de Usuario</td>
+                        <td>Nombre</td>
                         <td>PJ</td>
                         <td>PG</td>
                         <td>Efectividad(%)</td>
                     </thead>
                     <% mostEffectiveArr.forEach(user => { %>
                         <tr class="tr_player" plid="<%= user.user_id %>">
-                            <td><%= user.user_username %></td>
+                            <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
                             <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
@@ -82,14 +82,14 @@
                 <summary class="stat_title">Jugadores menos efectivos</summary>
                 <table>
                     <thead>
-                        <td>Nombre de Usuario</td>
+                        <td>Nombre</td>
                         <td>PJ</td>
                         <td>PG</td>
                         <td>Efectividad(%)</td>
                     </thead>
                     <% lessEffectiveArr.forEach(user => { %>
                         <tr class="tr_player" plid="<%= user.user_id %>">
-                            <td><%= user.user_username %></td>
+                            <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
                             <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
@@ -104,7 +104,7 @@
                 <summary class="stat_title">Jugador(es) con mas partidos jugados</summary>
                 <table>
                     <thead>
-                        <td>Nombre de Usuario</td>
+                        <td>Nombre</td>
                         <td>PJ</td>
                         <td>PG</td>
                         <td>PP</td>
@@ -112,7 +112,7 @@
                     </thead>
                     <% mostPlayedPlayers.forEach(user => { %>
                         <tr class="tr_player" plid="<%= user.user_id %>">
-                            <td><%= user.user_username %></td>
+                            <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
                             <td><%= user.user_lostmatches %></td>
