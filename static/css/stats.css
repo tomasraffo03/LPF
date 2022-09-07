@@ -1,0 +1,58 @@
+.title {
+    width: 100%;
+    text-align: center;
+    font-size: 40px;
+    margin-bottom: 5vh;
+}
+
+.stat {
+    width: 93%;
+    margin: 0 3% 20px 3%;
+    text-align: left;
+    border-bottom: 1px solid #000;
+    padding-bottom: 5px;
+}
+
+.stat_title {
+    font-size: 25px;
+}
+
+table {
+    margin-top: 10px;
+    width: 80%;
+    border-collapse: collapse;
+    font-size: 20px;
+}
+
+table, thead, td {
+    border: 1px solid #000;
+}
+
+td, thead {
+    padding: 5px;
+    background: rgb(247, 247, 247);
+}
+
+tr:hover > td{
+    cursor: pointer;
+    background: rgb(83, 82, 82);
+}
+
+.fa-arrow-left {
+    margin: 1%;
+}
+
+@media (max-width: 400px) {
+    .title {
+        font-size: 30px;
+    }
+
+    .stat_title {
+        font-size: 20px;
+    }
+
+    table {
+        font-size: 15px;
+        width: 100%;
+    }
+}

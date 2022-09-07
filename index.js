@@ -15,12 +15,12 @@ const connection = mysql.createConnection({
   // host: 'localhost',
   // user: 'root',
   // database: 'LPF'
-  
+
   // host: 'blcxjxn8m2yr46v2yskz-mysql.services.clever-cloud.com',
   // user: 'udgosbqqzaafp0ip',
   // password: 'hBuAkkTyoxyE6F9lzeXk',
   // database: 'blcxjxn8m2yr46v2yskz'
-  
+
   database: 'lpf',
   user: 'ydjsy5l0l2sfvccc7i1b',
   host: 'aws-sa-east-1.connect.psdb.cloud',
@@ -182,6 +182,23 @@ app.get('/borrarJugador/:idPartido', (req, res) => {
   })
 })
 
+
+app.get('/estadisticas', (req, res) => {
+  connection.query("SELECT * FROM user", (err, rowsUser) => {
+    if (err) throw err;
+    connection.query("SELECT * FROM matchs INNER JOIN match_det ON match_id = match_det_id WHERE match_status = 'jugado'", (err, rowsMatch) => {
+      if (err) throw err;
+      let mostWinnersArr = mostWinners(rowsUser);
+      let mostLosersArr = mostLosers(rowsUser);
+      let mostEffectiveArr = mostAndLessEffective(rowsUser).arrayMost;
+      let lessEffectiveArr = mostAndLessEffective(rowsUser).arrayLess;
+      let mostPlayedPlayers = mostPlayedMatches(rowsUser);
+      let mostGoalsMatchs = mostGoalsMatches(rowsMatch);
+
+      res.render('estadisticas', { mostWinnersArr, mostLosersArr, mostEffectiveArr, lessEffectiveArr, mostPlayedPlayers, mostGoalsMatchs });
+    })
+  })
+})
 
 app.post('/login', (req, res) => {
   let username = req.body.username;
@@ -403,3 +420,96 @@ asyncQuery = (query, params) => {
 // "INSERT INTO user VALUES (1,'A','2003-05-02','Tomas','Raffo','MED',DEFAULT,DEFAULT,'0','0','tomasraffo',?)"
 // cuando llega consulta => busco primer user_username = username => si no hay nada => chau, si hay => nuevoHash con password y comparo nuevoHash == rows[0].user_password
 
+function mostWinners(users) {
+  let mostWinnerArray = [];
+  let maxWins = 0;
+
+  for (let x = 0; x < users.length; x++) {
+    if (users[x].user_wonmatches >= maxWins) {
+      maxWins = users[x].user_wonmatches;
+    }
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].user_wonmatches == maxWins) {
+      mostWinnerArray.push(users[i])
+    }
+  }
+
+  return mostWinnerArray;
+}
+
+function mostLosers(users) {
+  let array = [];
+  let maxLost = 0;
+
+
+  for (let x = 0; x < users.length; x++) {
+    if (users[x].user_lostmatches >= maxLost) {
+      maxLost = users[x].user_lostmatches;
+    }
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].user_lostmatches == maxLost) {
+      array.push(users[i])
+    }
+  }
+
+  return array;
+}
+
+function mostAndLessEffective(users) {
+  let arrayMost = [];
+  let arrayLess = [];
+
+  users.sort((a, b) => {
+    return (((b.user_wonmatches / b.user_pydmchs) * 100) - ((a.user_wonmatches / a.user_pydmchs) * 100) || (b.user_pydmchs - a.user_pydmchs));
+  })
+
+  arrayMost = [users[0], users[1], users[2]];
+
+  users.sort((a, b) => {
+    return (((b.user_wonmatches / b.user_pydmchs) * 100) - ((a.user_wonmatches / a.user_pydmchs) * 100) || (a.user_pydmchs - b.user_pydmchs));
+  })
+  arrayLess = [users[users.length - 1], users[users.length - 2], users[users.length - 3]];
+  return { arrayMost, arrayLess };
+}
+
+function mostPlayedMatches(users) {
+  let mostPlayedPlayers = [];
+  let maxPlayed = 0;
+
+  for (let x = 0; x < users.length; x++) {
+    if (users[x].user_pydmchs > maxPlayed) {
+      maxPlayed = users[x].user_pydmchs;
+    }
+  }
+
+  for (let i = 0; i < users.length; i++) {
+    if (users[i].user_pydmchs == maxPlayed) {
+      mostPlayedPlayers.push(users[i])
+    }
+  }
+
+  return mostPlayedPlayers;
+}
+
+function mostGoalsMatches(matchs) {
+  let array = [];
+  let maxGoals = 0;
+
+  for (let x = 0; x < matchs.length; x++) {
+    if (matchs[x].match_det_t1goals + matchs[x].match_det_t2goals > maxGoals) {
+      maxGoals = matchs[x].match_det_t1goals + matchs[x].match_det_t2goals;
+    }
+  }
+
+  for (let i = 0; i < matchs.length; i++) {
+    if (matchs[i].match_det_t1goals + matchs[i].match_det_t2goals == maxGoals) {
+      array.push(matchs[i])
+    }
+  }
+
+  return array;
+}

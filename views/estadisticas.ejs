@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
+    <script src="https://kit.fontawesome.com/70cc7e71fa.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/stats.css">
+    <title>Estadísticas</title>
+</head>
+<body>
+    <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
+    <div class="main">
+        <h1 class="title">Estadísticas</h1>
+
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Jugadores con más Partidos ganados</summary>
+                <table>
+                    <thead>
+                        <td>Nombre de Usuario</td>
+                        <td>PG</td>
+                        <td>PJ</td>
+                    </thead>
+                    <% mostWinnersArr.forEach(user => { %>
+                        <tr class="tr_player" plid="<%= user.user_id %>">
+                            <td><%= user.user_username %></td>
+                            <td><%= user.user_wonmatches %></td>
+                            <td><%= user.user_pydmchs %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Jugadores con más Partidos perdidos</summary>
+                <table>
+                    <thead>
+                        <td>Nombre de Usuario</td>
+                        <td>PP</td>
+                        <td>PJ</td>
+                    </thead>
+                    <% mostLosersArr.forEach(user => { %>
+                        <tr class="tr_player" plid="<%= user.user_id %>">
+                            <td><%= user.user_username %></td>
+                            <td><%= user.user_lostmatches %></td>
+                            <td><%= user.user_pydmchs %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Jugadores más efectivos</summary>
+                <table>
+                    <thead>
+                        <td>Nombre de Usuario</td>
+                        <td>PJ</td>
+                        <td>PG</td>
+                        <td>Efectividad(%)</td>
+                    </thead>
+                    <% mostEffectiveArr.forEach(user => { %>
+                        <tr class="tr_player" plid="<%= user.user_id %>">
+                            <td><%= user.user_username %></td>
+                            <td><%= user.user_pydmchs %></td>
+                            <td><%= user.user_wonmatches %></td>
+                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Jugadores menos efectivos</summary>
+                <table>
+                    <thead>
+                        <td>Nombre de Usuario</td>
+                        <td>PJ</td>
+                        <td>PG</td>
+                        <td>Efectividad(%)</td>
+                    </thead>
+                    <% lessEffectiveArr.forEach(user => { %>
+                        <tr class="tr_player" plid="<%= user.user_id %>">
+                            <td><%= user.user_username %></td>
+                            <td><%= user.user_pydmchs %></td>
+                            <td><%= user.user_wonmatches %></td>
+                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Jugador(es) con mas partidos jugados</summary>
+                <table>
+                    <thead>
+                        <td>Nombre de Usuario</td>
+                        <td>PJ</td>
+                        <td>PG</td>
+                        <td>PP</td>
+                        <td>Efectividad(%)</td>
+                    </thead>
+                    <% mostPlayedPlayers.forEach(user => { %>
+                        <tr class="tr_player" plid="<%= user.user_id %>">
+                            <td><%= user.user_username %></td>
+                            <td><%= user.user_pydmchs %></td>
+                            <td><%= user.user_wonmatches %></td>
+                            <td><%= user.user_lostmatches %></td>
+                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+        
+        <div class="stat">
+            <details>
+                <summary class="stat_title">Partido(s) con más goles</summary>
+                <table>
+                    <thead>
+                        <td>Fecha</td>
+                        <td>Hora</td>
+                        <td>Goles equipo 1</td>
+                        <td>Goles equipo 2</td>
+                        <td>Total goles</td>
+                    </thead>
+                    <% mostGoalsMatchs.forEach(match => { %>
+                        <tr class="tr_match" matchid="<%= match.match_id %>">
+                            <td><%= match.match_date.toLocaleDateString('en-GB') %></td>
+                            <td><%= match.match_hour %></td>
+                            <td><%= match.match_det_t1goals %></td>
+                            <td><%= match.match_det_t2goals %></td>
+                            <td><%= match.match_det_t1goals + match.match_det_t2goals %></td>
+                        </tr>
+                    <% }) %>
+                </table>
+            </details>
+        </div>
+    </div>
+
+    <script>
+        let tr_players = document.getElementsByClassName('tr_player');
+        let tr_matchs = document.getElementsByClassName('tr_match');
+
+        for (let x = 0; x < tr_players.length; x++) {
+            tr_players[x].addEventListener('click', (e) => {
+                window.location.href = `/jugador/${e.target.parentNode.getAttribute('plid')}`;
+            })
+        }
+
+        for (let x = 0; x < tr_matchs.length; x++) {
+            tr_matchs[x].addEventListener('click', (e) => {
+                window.location.href = `/partido/${e.target.parentNode.getAttribute('matchid')}`;
+            })
+        }
+    </script>
+
+</body>
+</html>

@@ -1,9 +1,15 @@
 const b_confUser = document.getElementById('b_confUser');
 const b_logout = document.getElementById('b_logout');
 
+const b_estadisticas = document.getElementById('b_estadisticas');
+
 const b_historialPartidos = document.getElementById('b_historialPartidos');
 
 const b_detallePartido = document.getElementsByClassName('b_detallePartido');
+
+b_estadisticas.addEventListener('click', () => {
+    window.location.href = `/estadisticas`;
+})
 
 b_confUser.addEventListener('click', () => {
     window.location.href = `/configuracion/${b_confUser.getAttribute('username')}`
@@ -12,6 +18,7 @@ b_confUser.addEventListener('click', () => {
 b_logout.addEventListener('click', () => {
     window.location.href = `/logout`
 })
+
 
 const div_p_pendConf = document.getElementById('partidos_pend_conf');
 const div_p_jugados = document.getElementById('partidos_jugados');
