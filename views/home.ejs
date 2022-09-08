@@ -34,12 +34,14 @@
                 <button class="admin_button" id="b_altaUsuario">Dar de alta un usuario</button>
                 <button class="admin_button" id="b_crearPartido">Crear partido</button>
                 <button class="admin_button" id="b_borrarJugador">Borrar Jugador de un Partido</button>
+                <button class="admin_button" id="b_verUsuarios">Ver Usuarios</button>
             </div>
 
             <script>
                 const b_altaUsuario = document.getElementById('b_altaUsuario');
                 const b_crearPartido = document.getElementById('b_crearPartido');
                 const b_borrarJugador = document.getElementById('b_borrarJugador');
+                const b_verUsuarios = document.getElementById('b_verUsuarios');
 
                 b_altaUsuario.addEventListener('click', () => {
                     window.location.href = `/altausuario`
@@ -51,6 +53,10 @@
 
                 b_borrarJugador.addEventListener('click', () => {
                     window.location.href = `/borrarJugador/${parseInt(prompt('Numero de partido?'))}`
+                })
+
+                b_verUsuarios.addEventListener('click', () => {
+                    window.location.href = `/listaUsuarios`;
                 })
             </script>
         <% } %> 

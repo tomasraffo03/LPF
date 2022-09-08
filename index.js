@@ -166,20 +166,24 @@ app.get('/jugador/:idJugador', (req, res) => {
   })
 })
 
-app.get('/borrarJugador/:idPartido', (req, res) => {
-  connection.query("SELECT match_id, match_status, match_team1, match_team2 FROM matchs WHERE match_id = ?", [req.params.idPartido], (err, rowsMatch) => {
-    if (err) { throw err }
-    if (rowsMatch.length > 0 && rowsMatch[0].match_status != 'jugado') {
-      connection.query("SELECT team_id, user_id, user_name, user_surname FROM team INNER JOIN user ON team_player = user_id WHERE team_id = ? OR team_id = ?", [rowsMatch[0].match_team1, rowsMatch[0].match_team2], (err, rowsTeam) => {
-        if (err) { throw err }
-        let arrRes = [...rowsMatch, ...rowsTeam];
-        console.log(arrRes)
-        res.render('borrarJugador', { data: arrRes })
-      })
-    } else {
-      res.send(`<p>Partido inexistente o ya Jugado</p>${buttonVolverOrigen}`)
-    }
-  })
+app.get('/borrarJugador/:idPartido', (req, res) => { //only admin
+  if (req.session.role == 'A') {
+    connection.query("SELECT match_id, match_status, match_team1, match_team2 FROM matchs WHERE match_id = ?", [req.params.idPartido], (err, rowsMatch) => {
+      if (err) { throw err }
+      if (rowsMatch.length > 0 && rowsMatch[0].match_status != 'jugado') {
+        connection.query("SELECT team_id, user_id, user_name, user_surname FROM team INNER JOIN user ON team_player = user_id WHERE team_id = ? OR team_id = ?", [rowsMatch[0].match_team1, rowsMatch[0].match_team2], (err, rowsTeam) => {
+          if (err) { throw err }
+          let arrRes = [...rowsMatch, ...rowsTeam];
+          console.log(arrRes)
+          res.render('borrarJugador', { data: arrRes })
+        })
+      } else {
+        res.send(`<p>Partido inexistente o ya Jugado</p>${buttonVolverOrigen}`)
+      }
+    })
+  } else {
+    res.send(`<p>No tenes permiso para ver esta pagina</p>${buttonVolverOrigen}`)
+  }
 })
 
 
@@ -198,6 +202,17 @@ app.get('/estadisticas', (req, res) => {
       res.render('estadisticas', { mostWinnersArr, mostLosersArr, mostEffectiveArr, lessEffectiveArr, mostPlayedPlayers, mostGoalsMatchs });
     })
   })
+})
+
+app.get('/listaUsuarios', (req, res) => { //only admin
+  if (req.session.role == 'A') {
+    connection.query("SELECT user_id, user_role, user_name, user_surname, user_username FROM user", (err, rowsUser) => {
+      if (err) throw err;
+      res.render('listaUsuarios', { users: rowsUser })
+    })
+  } else {
+    res.send(`<p>No tenes permiso para ver esta pagina</p>${buttonVolverOrigen}`)
+  }
 })
 
 app.post('/login', (req, res) => {
