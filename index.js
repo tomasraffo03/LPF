@@ -222,8 +222,6 @@ app.post('/login', (req, res) => {
   connection.query("SELECT user_id, user_username, user_password, user_role FROM user WHERE user_username = ?", [username], (err, rows) => {
     if (err) { throw err }
 
-    let role = rows[0].user_role;
-
     if (rows.length == 0) {
       req.session.auth = false;
       req.session.username = '';
@@ -232,6 +230,7 @@ app.post('/login', (req, res) => {
     } else {
       if (rows[0].user_password == password) {
         // iniciar sesion
+        let role = rows[0].user_role;
         req.session.role = role;
         req.session.auth = true;
         req.session.username = username;
