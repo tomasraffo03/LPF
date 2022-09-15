@@ -100,7 +100,10 @@
                 <input type="hidden" name="eq2" value="<%= data[0].match_team2 %>">
                 <input type="hidden" id="eq2players" name="eq2players" value='[]'>
                 <input type="hidden" name="match_id" value="<%= data[0].match_id %>">
-                <button type="submit" class="submit" id="editarSubmit"><i class="fa-solid fa-floppy-disk"></i></button>
+                <div class="edit_buttons_div">
+                    <button type="button" class="submit" id="buttonAlAzar"><i class="fa-solid fa-dice-five"></i></button>
+                    <button type="submit" class="submit" id="editarSubmit"><i class="fa-solid fa-floppy-disk"></i></button>
+                </div>
             </form>
             <% if (data[0].match_status == 'confirmado') { %>
                 <button id="cargarResultado" class="submit"><a href="/cargarResultado/<%= data[0].match_id %>">Cargar Resultado</a></button>
@@ -118,7 +121,22 @@
     </div>
 
     <style>
+        .edit_buttons_div {
+            width: 100%;
+            display: flex;
+            justify-content: space-evenly;
+            margin: 10px 0 0 0;
+        }
         
+        .edit_buttons_div button {
+            margin: 0;
+        }
+
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
         .formBorrar {
             width: 100%;
             display: flex;
@@ -188,6 +206,14 @@
             background: none;
             font-size: 20px;
             cursor: pointer;
+        }
+        
+        #anotarseButton {
+            margin: 10px 0 0 0;
+        }
+        
+        #cargarResultado {
+            margin: 0;    
         }
         
         .player {
