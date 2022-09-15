@@ -16,11 +16,11 @@
         <div class="usuarios">
             <% users.forEach(user => { %>
                 <div class="usuario" plid="<%= user.user_id %>">
-                    <p class="p_usuario" plid="<%= user.user_id %>"><%= user.user_id %> <%= user.user_name %> <%= user.user_surname %>
+                    <p class="p_usuario" plid="<%= user.user_id %>"><%= user.user_id %> <%= user.user_name %> <%= user.user_surname %> (<%= user.user_username %>)
                         <% if (user.user_role == 'A') { %>
-                            (ADMIN)
+                            [ADMIN]
                         <% } else { %>
-                            (JUGADOR)
+                            [JUGADOR]
                         <% } %>
                     </p>
                 </div>
@@ -29,13 +29,18 @@
     </div>
 
     <style>
+        body {
+            width: 100vw;
+            overflow-x: hidden;
+        }
+
         .main {
             padding: 10px;
-            width: 95%;
+            width: 100%;
         }
 
         .usuarios {
-            margin-top: 5vh;
+            margin-top: 2vh;
             width: 100%;
         }
 
