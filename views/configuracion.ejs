@@ -132,11 +132,6 @@
             med1 = svgDoc1.getElementById('medio');
             del1 = svgDoc1.getElementById('delantero');
 
-            arq2 = svgDoc2.getElementById('arquero');
-            def2 = svgDoc2.getElementById('defensor');
-            med2 = svgDoc2.getElementById('medio');
-            del2 = svgDoc2.getElementById('delantero');
-
             positionsArray1 = {
                 'ARQ': arq1,
                 'DEF': def1,
@@ -144,26 +139,10 @@
                 'DEL': del1
             }
 
-            positionsArray2 = {
-                'ARQ': arq2,
-                'DEF': def2,
-                'MED': med2,
-                'DEL': del2
-            }
-
-            
             let pos1 = svg1.getAttribute('pos1');
-            let pos2 = svg2.getAttribute('pos2');
-
-            console.log(pos1, pos2)
 
             //pintar zona
             positionsArray1[pos1].style.fill = '#f44'
-            med2.style.fill = 'transparent';
-
-            if (pos2 != '') {
-                positionsArray2[pos2].style.fill = '#4b9fad'
-            }
 
             Object.values(positionsArray1).forEach(posit => {
                 posit.addEventListener('mouseover', () => {
@@ -175,6 +154,31 @@
                     input_pos1.value = posit.id.substring(0, 3).toUpperCase();
                 })
             });
+        })
+
+        svg2.addEventListener('load', () => {
+            svgDoc2 = svg2.contentDocument;
+
+            arq2 = svgDoc2.getElementById('arquero');
+            def2 = svgDoc2.getElementById('defensor');
+            med2 = svgDoc2.getElementById('medio');
+            del2 = svgDoc2.getElementById('delantero');
+
+            positionsArray2 = {
+                'ARQ': arq2,
+                'DEF': def2,
+                'MED': med2,
+                'DEL': del2
+            }
+
+            let pos2 = svg2.getAttribute('pos2');
+
+            //pintar zona
+            med2.style.fill = "transparent";
+
+            if (pos2 != '') {
+                positionsArray2[pos2].style.fill = '#4b9fad'
+            }
 
             Object.values(positionsArray2).forEach(posit => {
                 posit.addEventListener('mouseover', () => {
