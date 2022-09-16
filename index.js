@@ -98,7 +98,7 @@ app.get('/crearpartido', (req, res) => { //only admin
 
 app.get('/configuracion/:username', (req, res) => { //only self or admin
   if (req.session.username == req.params.username || req.session.role == 'A') {
-    connection.query("SELECT user_id, user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_username FROM user WHERE user_username = ?", [req.session.username], (err, data) => {
+    connection.query("SELECT user_id, user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_username FROM user WHERE user_username = ?", [req.params.username], (err, data) => {
       if (err) { throw err }
       console.log(data)
       res.render('configuracion', { data: data })
