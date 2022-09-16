@@ -1,4 +1,5 @@
 <html lang="es">
+
 <head>
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -10,17 +11,24 @@
 
 <body>
     <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
-    
+
     <div class="main">
-        <p class="sign" align="center"><%= data[0].user_name %> <%= data[0].user_surname %></p>
-        <h4 align="center"><%= data[0].user_username %></h4>
+        <div class="top">
+            <h1 class="sign"><%= data[0].user_name %> <%= data[0].user_surname %></h1>
+            <button id="editarButton"><i class="fa-solid fa-pen-to-square"></i></button>
+        </div>
+        <h4><%= data[0].user_username %></h4>
         <form action="/configuracion" method="post" autocomplete="off">
             <label for="pos1">Posición principal (ARQ, DEF, MED, DEL) *</label>
-            <input class="field" name="pos1" id="pos1" type="text" placeholder="<%= data[0].user_pos %>" required autocomplete="off" maxlength="3">
+            <object data="/img/Field.svg" type="image/svg+xml" id="svg1" pos1="<%= data[0].user_pos %>"></object>
             <label for="pos2">Posición secundaria (ARQ, DEF, MED, DEL)</label>
-            <input class="field" name="pos2" id="pos2" type="text" placeholder="<%= data[0].user_pos2 %>" autocomplete="off" maxlength="3">
+            <object data="/img/Field.svg" type="image/svg+xml" id="svg2" pos2="<%= data[0].user_pos2 %>"></object>
+            <input name="pos1" id="pos1" type="hidden" value="<%= data[0].user_pos %>" required>
+            <input name="pos2" id="pos2" type="hidden" value="<%= data[0].user_pos2 %>">
+            <label for="dtbirth">Fecha de Nacimiento *</label>
+            <input class="dtbirth" name="dtbirth" id="dtbirth" type="date" value="<%= data[0].user_dtbirth.toLocaleDateString('fr-CA') %>" required autocomplete="off">
             <label for="password">Contraseña *</label>
-            <input class="pass" name="password" id="pass" type="password" required autocomplete="off">
+            <input class="contraseña" name="password" id="contraseña" type="password" required autocomplete="off">
             <input type="hidden" name="id" value="<%= data[0].user_id %>">
             <input type="hidden" name="username" value="<%= data[0].user_username %>">
             <input type="submit" value="Actualizar" class="submit" id="actualizarButton">
@@ -29,22 +37,54 @@
 
 
     <style>
+        .main {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+        }
+
+        .top {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 10%;
+            margin-top: 15px;
+        }
+
+        h4 {
+            margin: 15px 0;
+        }
+
+        #svg1, #svg2 {
+            width: 50%;
+        }
+
+        .sign {
+            width: 80%;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+        
+         #editarButton {
+            border: none;
+            background: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 0;
+        }
+        
         form {
             display: flex;
+            width: 100%;
             flex-direction: column;
             align-items: center;
             padding-top: 40px;
         }
 
-        .un, .pass {
-            margin-left: 0;
-        }
-
-        .submit {
-            margin-left: 0;
-        }
-
-        .field {
+        input {
             width: 76%;
             color: rgb(38, 50, 56);
             font-weight: 700;
@@ -58,14 +98,99 @@
             box-sizing: border-box;
             border: 2px solid rgba(0, 0, 0, 0.02);
             margin-bottom: 50px;
-            margin-left: 46px;
             text-align: center;
             margin-bottom: 27px;
             font-family: 'Ubuntu', sans-serif;
         }
+
+        .submit {
+            margin-left: 0;
+        }
     </style>
-    
-    
+
+    <script>
+        let input_pos1 = document.getElementById('pos1')
+        let input_pos2 = document.getElementById('pos2')
+        let svg1 = document.getElementById('svg1');
+        let svg2 = document.getElementById('svg2');
+        let svgDoc1;
+        let svgDoc2;
+
+        let arq1, arq2;
+        let def1, def2;
+        let med1, med2;
+        let del1, del2;
+
+        let positionsArray1 = [];
+        let positionsArray2 = [];
+        svg1.addEventListener('load', () => {
+            svgDoc1 = svg1.contentDocument;
+            svgDoc2 = svg2.contentDocument;
+
+            arq1 = svgDoc1.getElementById('arquero');
+            def1 = svgDoc1.getElementById('defensor');
+            med1 = svgDoc1.getElementById('medio');
+            del1 = svgDoc1.getElementById('delantero');
+
+            arq2 = svgDoc2.getElementById('arquero');
+            def2 = svgDoc2.getElementById('defensor');
+            med2 = svgDoc2.getElementById('medio');
+            del2 = svgDoc2.getElementById('delantero');
+
+            positionsArray1 = {
+                'ARQ': arq1,
+                'DEF': def1,
+                'MED': med1,
+                'DEL': del1
+            }
+
+            positionsArray2 = {
+                'ARQ': arq2,
+                'DEF': def2,
+                'MED': med2,
+                'DEL': del2
+            }
+
+            
+            let pos1 = svg1.getAttribute('pos1');
+            let pos2 = svg2.getAttribute('pos2');
+
+            console.log(pos1, pos2)
+
+            //pintar zona
+            positionsArray1[pos1].style.fill = '#f44'
+            med2.style.fill = 'transparent';
+
+            if (pos2 != '') {
+                positionsArray2[pos2].style.fill = '#4b9fad'
+            }
+
+            Object.values(positionsArray1).forEach(posit => {
+                posit.addEventListener('mouseover', () => {
+                    posit.style.cursor = "pointer"
+                })
+                posit.addEventListener('click', (e) => {
+                    Object.values(positionsArray1).forEach(p => { p.style.fill = 'transparent' });
+                    posit.style.fill = '#f44';
+                    input_pos1.value = posit.id.substring(0, 3).toUpperCase();
+                })
+            });
+
+            Object.values(positionsArray2).forEach(posit => {
+                posit.addEventListener('mouseover', () => {
+                    posit.style.cursor = "pointer"
+                })
+                posit.addEventListener('click', (e) => {
+                    Object.values(positionsArray2).forEach(p => { p.style.fill = 'transparent' });
+                    posit.style.fill = '#4b9fad';
+                    input_pos2.value = posit.id.substring(0, 3).toUpperCase();
+                })
+            });
+            
+        })
+    </script>
+
+
 </body>
 
 </html>
