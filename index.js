@@ -248,7 +248,7 @@ app.post('/altausuario', (req, res) => {
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
 
-  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, params.mail, correo, pw], (err, rows) => {
+  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, correo, params.username, pw], (err, rows) => {
     if (err) { throw err }
     console.log('Usuario creado!');
     res.redirect('/altausuario');
