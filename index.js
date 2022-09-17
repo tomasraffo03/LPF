@@ -102,7 +102,7 @@ app.get('/partido/:idPartido', (req, res) => {
         console.log(resArray)
       })
     } else {
-      res.send(`<p>Partido no existente</p>${buttonVolverOrigen}`)
+      res.send(`<p>Partido inexistente</p>${buttonVolverOrigen}`)
     }
 
   })
@@ -195,21 +195,7 @@ app.get('/listaUsuarios', (req, res) => { //only admin
 })
 
 app.get('/mandarMail', (req, res) => {
-  try {
-    mail()
-  } catch (error) {
-    console.log(error)
-  }
 
-
-  async function mail() {
-    await transporter.sendMail({
-      from: '"LPF" <lpfmysql@gmail.com>', 
-      to: "tomasraffom@gmail.com, Jpgalgano14@gmail.com", // list of receivers, ","
-      subject: "Partido nuevo", // Subject line
-      html: "<b>Hay un partido nuevo, anotate</b>", // html body
-    });
-  }
 })
 
 app.post('/login', (req, res) => {
@@ -269,8 +255,27 @@ app.post('/crearpartido', (req, res) => {
 
     connection.query("INSERT INTO `matchs` VALUES (NULL,?,?,'pendiente',?,?)", [maxId + 1, maxId + 2, req.body.date, req.body.hour], (err, rows) => {
       if (err) { throw err }
-      console.log('Partido creado!');
+      console.log(`Partido ${rows.insertId} creado!`);
+
       res.redirect('/crearpartido');
+
+      connection.query("SELECT user_mail FROM user WHERE user_mail != ''", (err, usersMails) => {
+        if (err) { throw err }
+        let listaMails = "";
+        for (let x = 0; x < usersMails.length; x++) {
+          listaMails = listaMails + usersMails[x].user_mail + ",";
+        }
+
+
+        mailBody = `<head>
+        <style>a {text-decoration: none;color: white !important;background: linear-gradient(to right, #9C27B0, #E040FB);border: 0;padding: 10px 40px;font-family: 'Ubuntu', sans-serif;font-size: 13px;box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04); width: 100px; heigth: 100px; margin-bottom: 10px}</style></head><body><h1>Hay un partido nuevo</h1><a href='https://lpf-nodejs-mysql.herokuapp.com/partido/${rows.insertId}'>Ver</a></body>`
+        
+        try {
+          mail(listaMails, mailBody)
+        } catch (error) {
+          console.log(error)
+        }
+      })
     })
   })
 })
@@ -386,7 +391,7 @@ app.post('/configuracion', (req, res) => {
 
   let pos2;
   let correo;
-  
+
   if (req.body.pos2 == '') { pos2 = null } else { pos2 = req.body.pos2.toUpperCase() }
   if (req.body.mail == '') { correo = null } else { correo = req.body.mail }
 
@@ -532,4 +537,13 @@ function mostGoalsMatches(matchs) {
   }
 
   return array;
+}
+
+async function mail(listOfUsers, mailBody) {
+  await transporter.sendMail({
+    from: '"LPF" <lpfmysql@gmail.com>',
+    to: listOfUsers,
+    subject: "Partido nuevo",
+    html: mailBody, // html body
+  });
 }

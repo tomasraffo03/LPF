@@ -27,8 +27,8 @@
             <input name="pos2" id="pos2" type="hidden" value="<%= data[0].user_pos2 %>">
             <label for="dtbirth">Fecha de Nacimiento *</label>
             <input class="dtbirth" name="dtbirth" id="dtbirth" type="date" value="<%= data[0].user_dtbirth.toLocaleDateString('fr-CA') %>" required autocomplete="off">
-            <label for="mail">Correo *</label>
-            <input name="mail" id="mail" type="email" placeholder="<%= data[0].user_mail %>" autocomplete="off">
+            <label for="mail">Correo</label>
+            <input name="mail" id="mail" type="email" value="<%= data[0].user_mail %>" autocomplete="off">
             <label for="password">Contraseña *</label>
             <input class="contraseña" name="password" id="contraseña" type="password" required autocomplete="off">
             <input type="hidden" name="id" value="<%= data[0].user_id %>">
