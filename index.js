@@ -2,38 +2,13 @@ const express = require('express');
 const app = express();
 const port = process.env.PORT || 3000;
 const path = require('path');
-const mysql = require('mysql');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const session = require('express-session');
+const { transporter } = require('./modules/mailer');
+const { connection } = require('./modules/database');
 
 const buttonVolverOrigen = '<a href="/home">Volver</a>';
-
-// const hash = crypto.createHash('sha256').update('tomasraffo').digest('hex');
-
-const connection = mysql.createConnection({
-  // host: 'localhost',
-  // user: 'root',
-  // database: 'LPF'
-
-  // host: 'blcxjxn8m2yr46v2yskz-mysql.services.clever-cloud.com',
-  // user: 'udgosbqqzaafp0ip',
-  // password: 'hBuAkkTyoxyE6F9lzeXk',
-  // database: 'blcxjxn8m2yr46v2yskz'
-
-  database: 'lpf',
-  user: 'ydjsy5l0l2sfvccc7i1b',
-  host: 'aws-sa-east-1.connect.psdb.cloud',
-  password: 'pscale_pw_Qwfg6U7azMvjfstf1nkaSKlAVUt5QkWRv9kWN6sEJh',
-  ssl: {
-    rejectUnauthorized: false
-  }
-})
-
-connection.connect((err) => {
-  if (err) throw err;
-  console.log('connected to DB');
-});
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'static')));
@@ -98,7 +73,7 @@ app.get('/crearpartido', (req, res) => { //only admin
 
 app.get('/configuracion/:username', (req, res) => { //only self or admin
   if (req.session.username == req.params.username || req.session.role == 'A') {
-    connection.query("SELECT user_id, user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_username FROM user WHERE user_username = ?", [req.params.username], (err, data) => {
+    connection.query("SELECT user_id, user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_mail, user_username FROM user WHERE user_username = ?", [req.params.username], (err, data) => {
       if (err) { throw err }
       if (data.length <= 0) {
         res.send(`<p>Usuario ${req.params.username} no encontrado</p>${buttonVolverOrigen}`)
@@ -160,7 +135,7 @@ app.get('/cargarResultado/:idPartido', (req, res) => { //only admin
 })
 
 app.get('/jugador/:idJugador', (req, res) => {
-  connection.query("SELECT user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_username FROM user WHERE user_id = ?", [req.params.idJugador], (err, rowsPlayers) => {
+  connection.query("SELECT user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_mail, user_username FROM user WHERE user_id = ?", [req.params.idJugador], (err, rowsPlayers) => {
     if (err) { throw err }
     if (rowsPlayers.length > 0) {
       res.render('jugador', { data: rowsPlayers })
@@ -210,12 +185,30 @@ app.get('/estadisticas', (req, res) => {
 
 app.get('/listaUsuarios', (req, res) => { //only admin
   if (req.session.role == 'A') {
-    connection.query("SELECT user_id, user_role, user_name, user_surname, user_username FROM user", (err, rowsUser) => {
+    connection.query("SELECT user_id, user_role, user_name, user_surname, user_username, user_mail FROM user", (err, rowsUser) => {
       if (err) throw err;
       res.render('listaUsuarios', { users: rowsUser })
     })
   } else {
     res.send(`<p>No tenes permiso para ver esta pagina</p>${buttonVolverOrigen}`)
+  }
+})
+
+app.get('/mandarMail', (req, res) => {
+  try {
+    mail()
+  } catch (error) {
+    console.log(error)
+  }
+
+
+  async function mail() {
+    await transporter.sendMail({
+      from: '"LPF" <lpfmysql@gmail.com>', 
+      to: "tomasraffom@gmail.com, Jpgalgano14@gmail.com", // list of receivers, ","
+      subject: "Partido nuevo", // Subject line
+      html: "<b>Hay un partido nuevo, anotate</b>", // html body
+    });
   }
 })
 
@@ -249,10 +242,13 @@ app.post('/login', (req, res) => {
 app.post('/altausuario', (req, res) => {
   let params = req.body;
   let secPos;
+  let correo;
+
+  if (params.mail == '') { correo = null } else { correo = params.mail }
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
 
-  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, params.username, pw], (err, rows) => {
+  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, params.mail, correo, pw], (err, rows) => {
     if (err) { throw err }
     console.log('Usuario creado!');
     res.redirect('/altausuario');
@@ -387,7 +383,7 @@ app.post('/borrarPartido', (req, res) => {
 app.post('/configuracion', (req, res) => {
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
   if (req.body.pos2 == '') { pos2 = null } else { pos2 = req.body.pos2.toUpperCase() }
-  connection.query("UPDATE user SET user_pos=?, user_pos2=?, user_dtbirth=?, user_password=? WHERE user_id=?", [req.body.pos1.toUpperCase(), pos2, req.body.dtbirth, pw, req.body.id], (err, rows) => {
+  connection.query("UPDATE user SET user_pos=?, user_pos2=?, user_dtbirth=?, user_mail=?, user_password=? WHERE user_id=?", [req.body.pos1.toUpperCase(), pos2, req.body.dtbirth, req.body.mail, pw, req.body.id], (err, rows) => {
     if (err) throw err;
     res.redirect(`/`)
   })
