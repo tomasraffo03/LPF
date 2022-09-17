@@ -244,6 +244,7 @@ app.post('/altausuario', (req, res) => {
   let secPos;
   let correo;
 
+  if (params.pos2 == '') { secPos = null } else { secPos = params.pos2 }
   if (params.mail == '') { correo = null } else { correo = params.mail }
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
@@ -382,8 +383,14 @@ app.post('/borrarPartido', (req, res) => {
 
 app.post('/configuracion', (req, res) => {
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
+
+  let pos2;
+  let correo;
+  
   if (req.body.pos2 == '') { pos2 = null } else { pos2 = req.body.pos2.toUpperCase() }
-  connection.query("UPDATE user SET user_pos=?, user_pos2=?, user_dtbirth=?, user_mail=?, user_password=? WHERE user_id=?", [req.body.pos1.toUpperCase(), pos2, req.body.dtbirth, req.body.mail, pw, req.body.id], (err, rows) => {
+  if (req.body.mail == '') { correo = null } else { correo = req.body.mail }
+
+  connection.query("UPDATE user SET user_pos=?, user_pos2=?, user_dtbirth=?, user_mail=?, user_password=? WHERE user_id=?", [req.body.pos1.toUpperCase(), pos2, req.body.dtbirth, correo, pw, req.body.id], (err, rows) => {
     if (err) throw err;
     res.redirect(`/`)
   })
