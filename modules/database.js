@@ -1,3 +1,4 @@
+const dotenv = require('dotenv').config();
 const mysql = require('mysql');
 
 const connection = mysql.createConnection({
@@ -13,7 +14,7 @@ const connection = mysql.createConnection({
     database: 'lpf',
     user: 'ydjsy5l0l2sfvccc7i1b',
     host: 'aws-sa-east-1.connect.psdb.cloud',
-    password: 'pscale_pw_Qwfg6U7azMvjfstf1nkaSKlAVUt5QkWRv9kWN6sEJh',
+    password: process.env.DATABASE_PASSWORD,
     ssl: {
         rejectUnauthorized: false
     }

@@ -1,12 +1,14 @@
+const dotenv = require('dotenv').config();
+
 const nodemailer = require('nodemailer');
 
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
-    secure: false, // true for 465, false for other ports
+    secure: false, 
     auth: {
-        user: 'lpfmysql@gmail.com', // generated ethereal user
-        pass: 'uwrzcehgakqlvdyp', // generated ethereal password
+        user: 'lpfmysql@gmail.com', 
+        pass: process.env.TRANSPORTER_PASSWORD,
     },
 });
 
