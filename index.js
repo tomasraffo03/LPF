@@ -194,10 +194,6 @@ app.get('/listaUsuarios', (req, res) => { //only admin
   }
 })
 
-app.get('/mandarMail', (req, res) => {
-
-})
-
 app.post('/login', (req, res) => {
   let username = req.body.username;
   let password = crypto.createHash('sha256').update(req.body.password).digest('hex');
@@ -218,6 +214,7 @@ app.post('/login', (req, res) => {
         req.session.auth = true;
         req.session.username = username;
         res.redirect('/home')
+        console.log(`${req.session.username} se conectó`);
       } else {
         res.status(400).send(`<p>Contraseña incorrecta</p> ${buttonVolverOrigen}`)
       }
