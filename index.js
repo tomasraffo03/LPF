@@ -215,7 +215,7 @@ app.post('/login', (req, res) => {
         req.session.username = username;
         res.redirect('/home')
         console.log(`${req.session.username} se conectó`);
-        connection.query("UPDATE user SET user_lastlogin = NOW() WHERE user_username = ?", [username], (err, rows) => {
+        connection.query("UPDATE user SET user_lastlogin = CONVERT_TZ(NOW(),'SYSTEM','America/Montevideo') WHERE user_username = ?", [username], (err, rows) => {
           if (err) { throw err }
         })
       } else {
