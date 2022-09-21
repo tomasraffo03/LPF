@@ -13,53 +13,99 @@
 <body>
     <div class="main">
         <a href="/"><i class="fa-solid fa-arrow-left"></i></a>
-        <div class="usuarios">
+        <table>
+            <thead id="thead">
+                <td>ID</td>
+                <td>Nombre</td>
+                <td>Nombre de Usuario</td>
+                <td>Rol</td>
+                <td>Mail</td>
+                <td>Ultimo inicio de sesión</td>
+            </thead>
             <% users.forEach(user => { %>
-                <div class="usuario" plid="<%= user.user_id %>">
-                    <p class="p_usuario" plid="<%= user.user_id %>"><%= user.user_id %> <%= user.user_name %> <%= user.user_surname %> (<%= user.user_username %>)
-                        <% if (user.user_role == 'A') { %>
-                            [ADMIN]
-                        <% } else { %>
-                            [JUGADOR]
-                        <% } %>
-                    </p>
-                </div>
+                <tr class="usuario" plid="<%= user.user_id %>">
+                    <td><%= user.user_id %></td>
+                    <td><%= user.user_name %> <%= user.user_surname %></td>
+                    <td><%= user.user_username %></td>
+                    <% if (user.user_role == 'A') { %>
+                        <td>ADMIN</td>
+                    <% } else { %>
+                        <td>JUGADOR</td>
+                    <% } %>
+
+                    <% if (user.user_mail != "") { %>
+                        <td><%= user.user_mail %></td>
+                    <% } else { %>
+                        <td> </td>
+                    <% } %>
+                    
+                    <% if (user.user_lastlogin != undefined) { %>
+                        <td><%= new Date(user.user_lastlogin).toLocaleString("es-AR") %></td>
+                    <% } else { %>
+                        <td> </td>
+                    <% } %>
+                    
+                </tr>
             <% }) %>
-        </div>
+        </table>
+        
     </div>
 
     <style>
         body {
             width: 100vw;
-            overflow-x: hidden;
-        }
+        }        
 
         .main {
             padding: 10px;
             width: 100%;
         }
 
-        .usuarios {
-            margin-top: 2vh;
-            width: 100%;
+        .stat_title {
+            font-size: 25px;
         }
 
-        .p_usuario {
-            width: 100%;
-            height: 100%;
+        table {
+            margin-top: 10px;
+            width: 95%;
+            border-collapse: collapse;
+            font-size: 20px;
+            border-radius: 20px;
         }
 
-        .usuario {
-            padding: 10px 0;
-            width: 100%;
+        thead {
             border-bottom: 1px solid #000;
-            cursor: pointer;
+            border-radius: 20px;
         }
 
-        .usuario:hover {
+        td, thead {
+            padding: 5px;
+            background: rgb(247, 247, 247);
+        }
+
+        tr:hover > td {
+            cursor: pointer;
             background: #eec6fd;
         }
 
+        .fa-arrow-left {
+            margin: 1%;
+        }
+
+        @media (max-width: 820px) {
+            .title {
+                font-size: 30px;
+            }
+
+            .stat_title {
+                font-size: 20px;
+            }
+
+            table {
+                font-size: 15px;
+                width: 100%;
+            }
+        }
 
     </style>
 
@@ -68,7 +114,7 @@
         
         for (let x = 0; x < usuarios.length; x++) {
             usuarios[x].addEventListener('click', (e) => {
-                window.location.href = `/jugador/${e.target.getAttribute('plid')}`;
+                window.location.href = `/jugador/${e.target.parentElement.getAttribute('plid')}`;
             })
         }
     </script>

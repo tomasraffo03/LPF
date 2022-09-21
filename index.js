@@ -135,7 +135,7 @@ app.get('/cargarResultado/:idPartido', (req, res) => { //only admin
 })
 
 app.get('/jugador/:idJugador', (req, res) => {
-  connection.query("SELECT user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_mail, user_username FROM user WHERE user_id = ?", [req.params.idJugador], (err, rowsPlayers) => {
+  connection.query("SELECT user_role, user_dtbirth, user_name, user_surname, user_pos, user_pos2, user_pydmchs, user_wonmatches, user_lostmatches, user_mail, user_username, user_lastlogin FROM user WHERE user_id = ?", [req.params.idJugador], (err, rowsPlayers) => {
     if (err) { throw err }
     if (rowsPlayers.length > 0) {
       res.render('jugador', { data: rowsPlayers })
@@ -185,7 +185,7 @@ app.get('/estadisticas', (req, res) => {
 
 app.get('/listaUsuarios', (req, res) => { //only admin
   if (req.session.role == 'A') {
-    connection.query("SELECT user_id, user_role, user_name, user_surname, user_username, user_mail FROM user", (err, rowsUser) => {
+    connection.query("SELECT user_id, user_role, user_name, user_surname, user_username, user_mail, user_lastlogin FROM user", (err, rowsUser) => {
       if (err) throw err;
       res.render('listaUsuarios', { users: rowsUser })
     })
@@ -215,6 +215,9 @@ app.post('/login', (req, res) => {
         req.session.username = username;
         res.redirect('/home')
         console.log(`${req.session.username} se conectó`);
+        connection.query("UPDATE user SET user_lastlogin = NOW() WHERE user_username = ?", [username], (err, rows) => {
+          if (err) { throw err }
+        })
       } else {
         res.status(400).send(`<p>Contraseña incorrecta</p> ${buttonVolverOrigen}`)
       }
@@ -232,7 +235,7 @@ app.post('/altausuario', (req, res) => {
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
 
-  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, correo, params.username, pw], (err, rows) => {
+  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?, DEFAULT)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, correo, params.username, pw], (err, rows) => {
     if (err) { throw err }
     console.log('Usuario creado!');
     res.redirect('/altausuario');
@@ -266,7 +269,7 @@ app.post('/crearpartido', (req, res) => {
 
         mailBody = `<head>
         <style>a {text-decoration: none;color: white !important;background: linear-gradient(to right, #9C27B0, #E040FB);border: 0;padding: 10px 40px;font-family: 'Ubuntu', sans-serif;font-size: 13px;box-shadow: 0 0 20px 1px rgba(0, 0, 0, 0.04); width: 100px; heigth: 100px; margin-bottom: 10px}</style></head><body><h1>Hay un partido nuevo</h1><a href='https://lpf-nodejs-mysql.herokuapp.com/partido/${rows.insertId}'>Ver</a></body>`
-        
+
         try {
           mail(listaMails, mailBody)
         } catch (error) {
