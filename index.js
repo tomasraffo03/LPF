@@ -18,6 +18,7 @@ app.use(session({
   secret: 'clave',
   resave: true,
   saveUninitialized: true,
+  maxAge: Date.now() + (1000)
 }))
 app.use(authChecker);
 
