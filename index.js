@@ -19,7 +19,7 @@ app.use(session({
   resave: true,
   saveUninitialized: true,
   cookie: {
-    maxAge: 1000
+    maxAge: (1000 * 3600 * 24)
   }
 }))
 app.use(authChecker);
