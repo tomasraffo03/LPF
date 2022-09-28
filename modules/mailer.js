@@ -5,7 +5,7 @@ const nodemailer = require('nodemailer');
 const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
     port: 587,
-    secure: false, 
+    secure: true, 
     auth: {
         user: 'lpfmysql@gmail.com', 
         pass: process.env.TRANSPORTER_PASSWORD,
