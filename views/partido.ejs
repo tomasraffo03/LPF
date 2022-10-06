@@ -63,7 +63,7 @@
             <% } %>
             <% if (data[0].match_status == 'pendiente' || data[0].match_status == 'confirmado') { %>
                 <% if (data.length > 1 && data[1].playersCount >= 12) { %>
-                    <input type="button" value="No más cupos" class="submit">                    
+                    <input type="button" value="No más cupos" class="submit disabled" disabled>                    
                 <% } else { %>
                     <input type="submit" value="Anotarse" class="submit" align="center" id="anotarseButton">
                 <% } %>
@@ -245,6 +245,11 @@
 
         .submit a {
             color: #fff;
+        }
+
+        .disabled {
+            background: rgb(122, 120, 120);
+            cursor: not-allowed;
         }
     </style>
 
