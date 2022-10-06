@@ -230,12 +230,12 @@ app.post('/altausuario', (req, res) => {
   let secPos;
   let correo;
 
-  if (params.pos2 == '') { secPos = null } else { secPos = params.pos2 }
+  if (params.pos2 == '') { secPos = null } else { secPos = params.pos2.toUpperCase() }
   if (params.mail == '') { correo = null } else { correo = params.mail }
 
   let pw = crypto.createHash('sha256').update(req.body.password).digest('hex');
 
-  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?, DEFAULT)", [params.role, params.dtbirth, params.name, params.surname, params.pos, secPos, correo, params.username, pw], (err, rows) => {
+  connection.query("INSERT INTO user VALUES (NULL,?,?,?,?,?,?,DEFAULT,DEFAULT,DEFAULT,?,?,?, DEFAULT)", [params.role, params.dtbirth, params.name, params.surname, params.pos.toUpperCase(), secPos, correo, params.username, pw], (err, rows) => {
     if (err) { throw err }
     console.log('Usuario creado!');
     res.redirect('/altausuario');
