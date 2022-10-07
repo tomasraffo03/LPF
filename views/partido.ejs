@@ -14,6 +14,8 @@
             <p class="sign" align="center">Partido <%= data[0].match_id %>
             <% if (user_role == 'A' && data[0].match_status != 'jugado') { %>
                 <button id="editarButton"><i class="fa-solid fa-pen-to-square"></i></button>
+            <% } else { %>
+                <button id="verEquiposButton"><i class="fa-solid fa-people-group"></i></button>
             <% } %>
             </p>
         <p class="sign black" align="center"><%= data[0].match_date.toLocaleDateString('en-GB') %> - <%= data[0].match_hour %></p>
@@ -117,6 +119,43 @@
                 </form>
             <% } %>
             <script src="/js/editarPartido.js"></script>
+        <% } else { %>
+            <div class="editarJugadores" id="verEquipos" hidden>
+                    <div class="t1">
+                        <h2 class="eq_header">Equipo 1</h2>
+                        <div class="eq_jugadores" id="eq_jugadores1">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team1) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                    <div class="t2">
+                        <h2 class="eq_header">Equipo 2</h2>
+                        <div class="eq_jugadores" id="eq_jugadores2">
+                            <% for (let x = 1; x < data.length; x++) {%>
+                                <% if (data[x].team_id == data[0].match_team2) {%>
+                                    <p class="e_jugador" plid="<%= data[x].team_player %>" id="jugador_<%= data[x].team_player %>"><%= data[x].user_name[0] %>. <%= data[x].user_surname %></p>
+                                <% } %>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+
+
+                <script>
+                    const verEquiposButton = document.getElementById('verEquiposButton');
+                    const verEquipos = document.getElementById('verEquipos');
+                    const div_jugadores = document.getElementById('div_jugadores');
+                    verEquiposButton.addEventListener('click', () => {
+                    div_jugadores.toggleAttribute('hidden')
+                    if (verEquipos != null) {
+                        verEquipos.toggleAttribute('hidden');
+                    }
+                    })
+
+                </script>
         <% } %>
     </div>
 
@@ -150,6 +189,10 @@
 
         .e_jugador:hover {
             cursor: move;
+        }
+
+        #verEquipos .e_jugador:hover {
+            cursor:default;
         }
 
         .e_jugador {
@@ -202,7 +245,7 @@
             width: 100%;
         }
 
-        #editarButton {
+        #editarButton, #verEquiposButton {
             border: none;
             background: none;
             font-size: 20px;
