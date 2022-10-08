@@ -346,8 +346,17 @@ app.post('/cargarResultado', (req, res) => {
   } else {
     let winnerTeam;
     let loserTeam;
+    let empate = false;
 
-    req.body.goles_eq1 > req.body.goles_eq2 ? (winnerTeam = req.body.team1, loserTeam = req.body.team2) : (winnerTeam = req.body.team2, loserTeam = req.body.team1)
+    if (req.body.goles_eq1 > req.body.goles_eq2) {
+      winnerTeam = req.body.team1;
+      loserTeam = req.body.team2;
+    } else if (req.body.goles_eq1 < req.body.goles_eq2) {
+      winnerTeam = req.body.team2;
+      loserTeam = req.body.team1;
+    } else {
+      empate = true;
+    }
 
     //crear match_det -> req.body match_id goles_eq1 goles_eq2
     connection.query("INSERT INTO match_det VALUES (?,?,?)", [req.body.match_id, req.body.goles_eq1, req.body.goles_eq2], (err, rows) => {
@@ -359,16 +368,25 @@ app.post('/cargarResultado', (req, res) => {
       if (err) { throw err }
     })
 
-    //para cada jugador en team where team_id = winnerTeam => user_pydmchs += 1, user_wonmatches += 1
-    connection.query("UPDATE user INNER JOIN team ON user.user_id = team.team_player SET user_pydmchs = user_pydmchs + 1, user_wonmatches = user_wonmatches + 1 WHERE team.team_id = ?", [winnerTeam], (err, rows) => {
-      if (err) { throw err }
-    })
+    if (!empate) {
+      //para cada jugador en team where team_id = winnerTeam => user_pydmchs += 1, user_wonmatches += 1
+      connection.query("UPDATE user INNER JOIN team ON user.user_id = team.team_player SET user_pydmchs = user_pydmchs + 1, user_wonmatches = user_wonmatches + 1 WHERE team.team_id = ?", [winnerTeam], (err, rows) => {
+        if (err) { throw err }
+      })
 
-    //para cada jugador en team where team_id = loserTeam => user_pydmchs += 1, user_lostmatches += 1
-    connection.query("UPDATE user INNER JOIN team ON user.user_id = team.team_player SET user_pydmchs = user_pydmchs + 1, user_lostmatches = user_lostmatches + 1 WHERE team.team_id = ?", [loserTeam], (err, rows) => {
-      if (err) { throw err }
-      res.redirect('/')
-    })
+      //para cada jugador en team where team_id = loserTeam => user_pydmchs += 1, user_lostmatches += 1
+      connection.query("UPDATE user INNER JOIN team ON user.user_id = team.team_player SET user_pydmchs = user_pydmchs + 1, user_lostmatches = user_lostmatches + 1 WHERE team.team_id = ?", [loserTeam], (err, rows) => {
+        if (err) { throw err }
+        res.redirect('/')
+      })
+    } else {
+      //para cada jugador en team where team_id = team1 or team2 => user_pydmchs += 1
+      connection.query("UPDATE user INNER JOIN team ON user.user_id = team.team_player SET user_pydmchs = user_pydmchs + 1 WHERE team.team_id = ? OR team.team_id = ?", [req.body.team1, req.body.team2], (err, rows) => {
+        if (err) { throw err }
+      })
+    }
+
+    res.redirect(`/partido/${req.body.match_id}`);
   }
 })
 
