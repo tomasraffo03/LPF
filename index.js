@@ -5,10 +5,11 @@ const path = require('path');
 const crypto = require('crypto');
 const bodyParser = require('body-parser');
 const session = require('express-session');
-const { transporter } = require('./modules/mailer');
+const { transporter, errorNodemailer } = require('./modules/mailer');
 const { connection } = require('./modules/database');
 
 const buttonVolverOrigen = '<a href="/home">Volver</a>';
+
 
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'static')));
