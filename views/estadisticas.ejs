@@ -71,7 +71,7 @@
                             <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
-                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                            <td><%= ((user.user_wonmatches / user.user_pydmchs) * 100).toFixed(2) %>%</td>
                         </tr>
                     <% }) %>
                 </table>
@@ -93,7 +93,7 @@
                             <td><%= user.user_name %> <%= user.user_surname %></td>
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
-                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                            <td><%= ((user.user_wonmatches / user.user_pydmchs) * 100).toFixed(2) %>%</td>
                         </tr>
                     <% }) %>
                 </table>
@@ -117,7 +117,7 @@
                             <td><%= user.user_pydmchs %></td>
                             <td><%= user.user_wonmatches %></td>
                             <td><%= user.user_lostmatches %></td>
-                            <td><%= (user.user_wonmatches / user.user_pydmchs) * 100 %>%</td>
+                            <td><%= ((user.user_wonmatches / user.user_pydmchs) * 100).toFixed(2) %>%</td>
                         </tr>
                     <% }) %>
                 </table>

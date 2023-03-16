@@ -22,12 +22,12 @@
             <p>Partidos Jugados: <%= data[0].user_pydmchs %></p>
             <p>Partidos Ganados: <%= data[0].user_wonmatches %>
                 <% if (data[0].user_pydmchs > 0) { %>
-                    (<%= (data[0].user_wonmatches / data[0].user_pydmchs) * 100 %>%)
+                    (<%= ((data[0].user_wonmatches / data[0].user_pydmchs) * 100).toFixed(2) %>%)
                 <% } %>
             </p>
             <p>Partidos Perdidos: <%= data[0].user_lostmatches %> 
                 <% if (data[0].user_pydmchs > 0) { %>
-                    (<%= (data[0].user_lostmatches / data[0].user_pydmchs) * 100 %>%)
+                    (<%= ((data[0].user_lostmatches / data[0].user_pydmchs) * 100).toFixed(2) %>%)
                 <% } %>
             </p>
         </div>
